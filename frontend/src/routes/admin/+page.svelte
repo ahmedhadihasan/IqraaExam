@@ -1,8 +1,6 @@
 <script>
     import { onMount } from 'svelte';
-    import { reportsAPI, examSessionsAPI, assignmentsAPI } from '$lib/api.js';
-
-    const API_BASE = 'http://localhost:8000';
+    import { reportsAPI, examSessionsAPI, assignmentsAPI, API_BASE_URL } from '$lib/api.js';
 
     let summary = null;
     let teacherStats = [];
@@ -55,7 +53,7 @@
         }
         resetting = true;
         try {
-            const res = await fetch(`${API_BASE}/reset-all-grades`, { method: 'DELETE' });
+            const res = await fetch(`${API_BASE_URL}/reset-all-grades`, { method: 'DELETE' });
             if (res.ok) {
                 alert('هەموو نمرەکان سڕانەوە!');
                 showResetGradesModal = false;
@@ -78,7 +76,7 @@
         }
         resetting = true;
         try {
-            const res = await fetch(`${API_BASE}/reset-everything`, { method: 'DELETE' });
+            const res = await fetch(`${API_BASE_URL}/reset-everything`, { method: 'DELETE' });
             if (res.ok) {
                 alert('هەموو داتاکان سڕانەوە!');
                 showResetEverythingModal = false;
