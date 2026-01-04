@@ -1,5 +1,8 @@
-// API configuration - Use environment variable or fallback to localhost
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+// API configuration - Use environment variable or production URL
+const API_BASE_URL = import.meta.env.VITE_API_URL || 
+    (typeof window !== 'undefined' && window.location.hostname !== 'localhost' 
+        ? 'https://iqraa-api-eczd.onrender.com' 
+        : 'http://localhost:8000');
 
 /**
  * Generic fetch wrapper with error handling
