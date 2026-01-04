@@ -133,7 +133,7 @@ def get_student_results(
         results.append(StudentResult(
             student_id=assignment.student.id,
             student_name=assignment.student.name,
-            student_age=assignment.student.age,
+            student_birth_year=assignment.student.birth_year,
             regular_teacher=assignment.student.regular_teacher,
             team_name=assignment.team.name,
             question_group=f"گرووپ {assignment.question_group.code}",
@@ -174,7 +174,7 @@ def export_to_csv_detailed(
     
     # Header row (Kurdish headers)
     header = [
-        'ناوی قوتابی', 'تەمەن', 'مامۆستای بابەت', 'تیم', 'گرووپی پرسیار', 'بارودۆخ',
+        'ناوی قوتابی', 'ساڵی لەدایکبوون', 'مامۆستای بابەت', 'تیم', 'گرووپی پرسیار', 'بارودۆخ',
         'م١ پ١', 'م١ پ٢', 'م١ پ٣', 'م١ پ٤', 'م١ پ٥', 'م١ پ٦', 'م١ پ٧', 'م١ پ٨', 'م١ پ٩',
         'م٢ پ١', 'م٢ پ٢', 'م٢ پ٣', 'م٢ پ٤', 'م٢ پ٥', 'م٢ پ٦', 'م٢ پ٧', 'م٢ پ٨', 'م٢ پ٩',
         'ناوەند پ١', 'ناوەند پ٢', 'ناوەند پ٣', 'ناوەند پ٤', 'ناوەند پ٥', 'ناوەند پ٦', 'ناوەند پ٧', 'ناوەند پ٨', 'ناوەند پ٩',
@@ -207,8 +207,8 @@ def export_to_csv_detailed(
         # Build row
         row = [
             assignment.student.name,
-            assignment.student.age,
-            assignment.student.regular_teacher,
+            assignment.student.birth_year or '',
+            assignment.student.regular_teacher or '',
             assignment.team.name,
             f"گرووپ {assignment.question_group.code}",
             status
@@ -296,7 +296,7 @@ def export_to_csv_summary(
     writer = csv.writer(output)
     
     # Simple header (Kurdish)
-    header = ['ناوی قوتابی', 'تەمەن', 'مامۆستای بابەت', 'تیم', 'گرووپ', 'کۆی گشتی', 'بارودۆخ', 'دەرچوو/نەدەرچوو']
+    header = ['ناوی قوتابی', 'ساڵی لەدایکبوون', 'مامۆستای بابەت', 'تیم', 'گرووپ', 'کۆی گشتی', 'بارودۆخ', 'دەرچوو/نەدەرچوو']
     writer.writerow(header)
     
     for assignment in assignments:
@@ -349,8 +349,8 @@ def export_to_csv_summary(
         
         row = [
             assignment.student.name,
-            assignment.student.age,
-            assignment.student.regular_teacher,
+            assignment.student.birth_year or '',
+            assignment.student.regular_teacher or '',
             assignment.team.name,
             f"گرووپ {assignment.question_group.code}",
             round(final_total, 2) if final_total else '',

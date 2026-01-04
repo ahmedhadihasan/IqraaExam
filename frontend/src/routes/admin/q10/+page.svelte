@@ -36,17 +36,17 @@
         const mark = parseFloat(q10Marks[assignment.id]);
         
         if (isNaN(mark) || mark < 0 || mark > 10) {
-            showError('نمرەی پ١٠ دەبێت لە نێوان ٠ و ١٠ دا بێت');
+            showError('نمرەی پرسیاری ١٠ دەبێت لە نێوان ٠ و ١٠ دا بێت');
             return;
         }
 
         savingId = assignment.id;
         try {
             await assignmentsAPI.updateQ10(assignment.id, mark);
-            showNotification('نمرەی پ١٠ پاشەکەوتکرا!');
+            showNotification('نمرەی پرسیاری ١٠ پاشەکەوتکرا!');
             await loadAssignments();
         } catch (error) {
-            showError('نەتوانرا نمرەی پ١٠ پاشەکەوت بکرێت');
+            showError('نەتوانرا نمرەی پرسیاری ١٠ پاشەکەوت بکرێت');
         } finally {
             savingId = null;
         }
@@ -54,7 +54,7 @@
 </script>
 
 <div class="q10-page">
-    <h1>نمرەدانی پرسیار ١٠</h1>
+    <h1>نمرەدانی پرسیاری ١٠</h1>
     <p class="subtitle">نمرەی کۆتایی پ١٠ (لە ١٠) زیادبکە بۆ قوتابیانی کە هەردوو مامۆستا نمرەیان داوە</p>
 
     {#if loading}
@@ -64,7 +64,7 @@
     {:else if assignments.length === 0}
         <div class="empty-state">
             <div class="empty-icon">📝</div>
-            <h3>هیچ قوتابییەک ئامادە نییە بۆ پ١٠</h3>
+            <h3>هیچ قوتابییەک ئامادە نییە بۆ پرسیاری ١٠</h3>
             <p>قوتابیان لێرە دەردەکەون دوای ئەوەی هەردوو مامۆستا نمرەیان بدەن</p>
         </div>
     {:else}
@@ -74,10 +74,10 @@
                     <thead>
                         <tr>
                             <th>قوتابی</th>
-                            <th>تیم</th>
+                            <th>لیژنە</th>
                             <th>گرووپ</th>
                             <th>بارودۆخ</th>
-                            <th>نمرەی پ١٠</th>
+                            <th>نمرەی پرسیاری ١٠</th>
                             <th>کردار</th>
                         </tr>
                     </thead>
@@ -87,7 +87,7 @@
                                 <td>
                                     <div class="student-info">
                                         <strong>{assignment.student.name}</strong>
-                                        <span class="text-light">تەمەن: {assignment.student.age}</span>
+                                        <span class="text-light">لەدایکبوون: {assignment.student.birth_year || '-'}</span>
                                     </div>
                                 </td>
                                 <td>{assignment.team.name}</td>
@@ -100,9 +100,9 @@
                                     {#if assignment.is_completed}
                                         <span class="badge badge-success">تەواوبوو</span>
                                     {:else if assignment.q10_mark !== null}
-                                        <span class="badge badge-warning">پ١٠ زیادکرا</span>
+                                        <span class="badge badge-warning">پرسیاری ١٠ زیادکرا</span>
                                     {:else}
-                                        <span class="badge badge-warning">ئامادەی پ١٠</span>
+                                        <span class="badge badge-warning">ئامادەی پرسیاری ١٠</span>
                                     {/if}
                                 </td>
                                 <td>

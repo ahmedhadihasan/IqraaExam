@@ -84,11 +84,11 @@
             </div>
             <div class="summary-card failed">
                 <span class="summary-value">{results.filter(r => getStatus(r) === 'failed').length}</span>
-                <span class="summary-label">نەدەرچوو</span>
+                <span class="summary-label">دەرنەچوو</span>
             </div>
             <div class="summary-card incomplete">
                 <span class="summary-value">{results.filter(r => getStatus(r) === 'incomplete').length}</span>
-                <span class="summary-label">تەواونەکرد</span>
+                <span class="summary-label">تەواونەکراو</span>
             </div>
             <div class="summary-card pending">
                 <span class="summary-value">{results.filter(r => getStatus(r) === 'pending' || getStatus(r) === 'partial' || getStatus(r) === 'waiting-q10').length}</span>
@@ -102,7 +102,7 @@
                     <thead>
                         <tr>
                             <th>قوتابی</th>
-                            <th>تەمەن</th>
+                            <th>لەدایکبوون</th>
                             <th>تیم</th>
                             <th>گرووپ</th>
                             <th>مامۆستا ١</th>
@@ -120,7 +120,7 @@
                             {@const status = getStatus(r)}
                             <tr>
                                 <td data-label="قوتابی"><strong>{r.student_name}</strong></td>
-                                <td data-label="تەمەن">{r.student_age}</td>
+                                <td data-label="لەدایکبوون">{r.student_birth_year || '-'}</td>
                                 <td data-label="تیم">{r.team_name}</td>
                                 <td data-label="گرووپ">
                                     <span class="badge badge-primary">{r.question_group}</span>

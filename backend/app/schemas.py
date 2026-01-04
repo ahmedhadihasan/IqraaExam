@@ -97,10 +97,10 @@ class ExamSessionResponse(ExamSessionBase):
 
 # ========== Student Schemas ==========
 class StudentBase(BaseModel):
-    name: str  # ناوی سییانی
+    name: str  # ناوی سییانی - required
     phone: Optional[str] = None  # ژمارەی تەلەفۆن
-    age: int  # تەمەن
-    regular_teacher: str  # مامۆستای بابەت
+    birth_year: Optional[int] = None  # ساڵی لەدایکبوون
+    regular_teacher: Optional[str] = None  # مامۆستای بابەت
     q10_mark: Optional[float] = None  # نمرەی پرسیاری ڡڠ
 
 class StudentCreate(StudentBase):
@@ -108,13 +108,18 @@ class StudentCreate(StudentBase):
 
 class StudentUpdate(BaseModel):
     name: Optional[str] = None
+    birth_year: Optional[int] = None
     phone: Optional[str] = None
-    age: Optional[int] = None
     regular_teacher: Optional[str] = None
     q10_mark: Optional[float] = None
 
-class StudentResponse(StudentBase):
+class StudentResponse(BaseModel):
     id: int
+    name: str
+    phone: Optional[str] = None
+    birth_year: Optional[int] = None
+    regular_teacher: Optional[str] = None
+    q10_mark: Optional[float] = None
     created_at: datetime
     
     class Config:
@@ -122,10 +127,10 @@ class StudentResponse(StudentBase):
 
 # CSV Import
 class StudentCSVRow(BaseModel):
-    name: str  # ناوی سییانی
+    name: str  # ناوی سییانی - required
     phone: Optional[str] = None  # ژمارەی تەلەفۆن
-    age: int  # تەمەن
-    regular_teacher: str  # مامۆستای بابەت
+    birth_year: Optional[int] = None  # ساڵی لەدایکبوون
+    regular_teacher: Optional[str] = None  # مامۆستای بابەت
     q10_mark: Optional[float] = None  # نمرەی پرسیاری ڡڠ
 
 
@@ -220,8 +225,8 @@ class TeacherStats(BaseModel):
 class StudentResult(BaseModel):
     student_id: int
     student_name: str
-    student_age: int
-    regular_teacher: str
+    student_birth_year: Optional[int] = None
+    regular_teacher: Optional[str] = None
     team_name: str
     question_group: str
     teacher1_marks: Dict[str, Optional[float]]
@@ -234,8 +239,8 @@ class StudentResult(BaseModel):
 
 class ExportData(BaseModel):
     student_name: str
-    student_age: int
-    regular_teacher: str
+    student_birth_year: Optional[int] = None
+    regular_teacher: Optional[str] = None
     team: str
     question_group: str
     t1_q1: Optional[float]

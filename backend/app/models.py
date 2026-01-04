@@ -67,8 +67,8 @@ class Student(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(100), nullable=False)  # ناوی سییانی
     phone = Column(String(20), nullable=True)  # ژمارەی تەلەفۆن
-    age = Column(Integer, nullable=False)  # تەمەن
-    regular_teacher = Column(String(100), nullable=False)  # مامۆستای بابەت
+    birth_year = Column(Integer, nullable=True)  # ساڵی لەدایکبوون
+    regular_teacher = Column(String(100), nullable=True)  # مامۆستای بابەت
     q10_mark = Column(Float, nullable=True)  # نمرەی پرسیاری ڡڠ (imported from CSV or set manually)
     created_at = Column(DateTime, default=datetime.utcnow)
     

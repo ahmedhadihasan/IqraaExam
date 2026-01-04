@@ -9,7 +9,7 @@
     
     // New student form
     let showForm = false;
-    let newStudent = { name: '', age: '', regular_teacher: '', phone: '', q10_mark: '' };
+    let newStudent = { name: '', birth_year: '', regular_teacher: '', phone: '', q10_mark: '' };
     let submitting = false;
 
     // Edit student modal
@@ -36,8 +36,8 @@
     }
 
     async function addStudent() {
-        if (!newStudent.name || !newStudent.age || !newStudent.regular_teacher) {
-            showError('تکایە هەموو خانەکان پڕبکەوە');
+        if (!newStudent.name) {
+            showError('تکایە ناوی قوتابی بنووسە');
             return;
         }
 
@@ -54,13 +54,15 @@
         submitting = true;
         try {
             const studentData = {
-                ...newStudent,
-                age: parseInt(newStudent.age),
+                name: newStudent.name,
+                birth_year: newStudent.birth_year ? parseInt(newStudent.birth_year) : null,
+                regular_teacher: newStudent.regular_teacher || null,
+                phone: newStudent.phone || null,
                 q10_mark: q10Value
             };
             await studentsAPI.create(studentData);
             showNotification('قوتابی بە سەرکەوتوویی زیادکرا');
-            newStudent = { name: '', age: '', regular_teacher: '', phone: '', q10_mark: '' };
+            newStudent = { name: '', birth_year: '', regular_teacher: '', phone: '', q10_mark: '' };
             showForm = false;
             await loadStudents();
         } catch (error) {
@@ -95,9 +97,9 @@
         try {
             await studentsAPI.update(editingStudent.id, {
                 name: editingStudent.name,
-                age: parseInt(editingStudent.age),
-                regular_teacher: editingStudent.regular_teacher,
-                phone: editingStudent.phone,
+                birth_year: editingStudent.birth_year ? parseInt(editingStudent.birth_year) : null,
+                regular_teacher: editingStudent.regular_teacher || null,
+                phone: editingStudent.phone || null,
                 q10_mark: q10Value
             });
             showNotification('قوتابی بە سەرکەوتوویی نوێکرایەوە');
@@ -149,8 +151,8 @@
     }
 
     function downloadTemplate() {
-        const headers = 'ناوی سییانی,ژمارەی تەلەفۆن,تەمەن,مامۆستای بابەت,نمرەی پرسیاری ١٠\n';
-        const example = 'ئەحمەد محمد کەریم,07701234567,15,مامۆستا علی,8.5\n';
+        const headers = 'ناوی سییانی,ژمارەی تەلەفۆن,ساڵی لەدایکبوون,مامۆستای بابەت,نمرەی پرسیاری ۱۰\n';
+        const example = 'ئەحمەد محمد کەریم,07701234567,2010,مامۆستا علی,8.5\n';
         const content = headers + example;
         
         const blob = new Blob(['\ufeff' + content], { type: 'text/csv;charset=utf-8;' });
@@ -207,13 +209,13 @@
                 </div>
                 <div class="modal-body">
                     <div class="csv-info">
-                        <p>ستوونەکانی پێویست لە فایلی CSV:</p>
+                        <p>ستوونەکانی فایلی CSV:</p>
                         <ul>
-                            <li><strong>ناوی سییانی</strong> - ناوی تەواوی قوتابی</li>
-                            <li><strong>ژمارەی تەلەفۆن</strong> - ژمارەی مۆبایل</li>
-                            <li><strong>تەمەن</strong> - تەمەن بە سال</li>
-                            <li><strong>مامۆستای بابەت</strong> - ناوی مامۆستای ڕێکوپێک</li>
-                            <li><strong>نمرەی پرسیاری ڡڠ</strong> - نمرەی پرسیاری ڡڠ (ئیختیاری)</li>
+                            <li><strong>ناوی سییانی</strong> - ناوی تەواوی قوتابی <span class="required">(پێویست)</span></li>
+                            <li><strong>ژمارەی تەلەفۆن</strong> - ژمارەی مۆبایل (ئیختیاری)</li>
+                            <li><strong>ساڵی لەدایکبوون</strong> - ساڵی لەدایکبوون وەک ٢٠١٠ (ئیختیاری)</li>
+                            <li><strong>مامۆستای بابەت</strong> - ناوی مامۆستای ڕێکوپێک (ئیختیاری)</li>
+                            <li><strong>نمرەی پرسیاری ١٠</strong> - نمرەی Q10 لە ٠ تا ١٠ (ئیختیاری)</li>
                         </ul>
                         <button class="btn btn-link" on:click={downloadTemplate}>
                             ⬇️ داگرتنی نموونەی CSV
@@ -290,11 +292,12 @@
                         />
                     </div>
                     <div class="form-group">
-                        <label class="form-label">تەمەن</label>
+                        <label class="form-label">ساڵی لەدایکبوون (ئیختیاری)</label>
                         <input 
                             type="number" 
                             class="form-input" 
-                            bind:value={editingStudent.age}
+                            bind:value={editingStudent.birth_year}
+                            placeholder="وەک ٢٠١٠"
                         />
                     </div>
                     <div class="form-group">
@@ -359,14 +362,12 @@
                         />
                     </div>
                     <div class="form-group">
-                        <label class="form-label">تەمەن</label>
+                        <label class="form-label">ساڵی لەدایکبوون (ئیختیاری)</label>
                         <input 
                             type="number" 
                             class="form-input" 
-                            bind:value={newStudent.age}
-                            placeholder="تەمەن"
-                            min="1"
-                            max="100"
+                            bind:value={newStudent.birth_year}
+                            placeholder="وەک ٢٠١٠"
                         />
                     </div>
                     <div class="form-group">
@@ -434,7 +435,7 @@
                             <th>ژمارە</th>
                             <th>ناو</th>
                             <th>تەلەفۆن</th>
-                            <th>تەمەن</th>
+                            <th>ساڵی لەدایکبوون</th>
                             <th>مامۆستای ڕێکوپێک</th>
                             <th>Q10</th>
                             <th>کردارەکان</th>
@@ -446,7 +447,7 @@
                                 <td data-label="ژمارە">{student.id}</td>
                                 <td data-label="ناو">{student.name}</td>
                                 <td data-label="تەلەفۆن">{student.phone || '-'}</td>
-                                <td data-label="تەمەن">{student.age}</td>
+                                <td data-label="ساڵی لەدایکبوون">{student.birth_year || '-'}</td>
                                 <td data-label="مامۆستای ڕێکوپێک">{student.regular_teacher || '-'}</td>
                                 <td data-label="Q10">
                                     {#if student.q10_mark !== null && student.q10_mark !== undefined}

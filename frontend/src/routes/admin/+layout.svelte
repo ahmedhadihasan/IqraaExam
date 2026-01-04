@@ -9,10 +9,10 @@
         { path: '/admin', label: 'داشبۆرد', icon: '📊' },
         { path: '/admin/students', label: 'قوتابیان', icon: '👨‍🎓' },
         { path: '/admin/assign', label: 'دابەشکردنی قوتابیان', icon: '📋' },
-        { path: '/admin/q10', label: 'نمرەدانی پ١٠', icon: '✏️' },
+        { path: '/admin/q10', label: 'نمرەدانی پرسیاری ١٠', icon: '✏️' },
         { path: '/admin/results', label: 'ئەنجامەکان', icon: '📈' },
         { path: '/admin/teachers', label: 'مامۆستاکان', icon: '👨‍🏫' },
-        { path: '/admin/groups', label: 'گرووپی پرسیارەکان', icon: '❓' },
+        { path: '/admin/groups', label: 'نمرەی گرووپی پرسیارەکان', icon: '❓' },
         { path: '/admin/sessions', label: 'دانیشتنەکان', icon: '📅' },
     ];
 
@@ -33,9 +33,9 @@
         </button>
         <a href="/" class="mobile-logo">
             <img src="/logo.jpg" alt="ئیقرا" />
-            ئیقرا
+            اقرا - هەولێر
         </a>
-        <span class="role-badge-mobile">بەڕێوەبەری گشتی</span>
+        <span class="role-badge-mobile">ئەدمینی سەرەکی</span>
     </header>
 
     <!-- Sidebar Overlay -->
@@ -48,9 +48,9 @@
         <div class="sidebar-header">
             <a href="/" class="logo">
                 <img src="/logo.jpg" alt="ئیقرا" class="sidebar-logo" />
-                ئیقرا
+                اقرا - هەولێر
             </a>
-            <span class="role-badge">بەڕێوەبەری گشتی</span>
+            <span class="role-badge">ئەدمینی سەرەکی</span>
         </div>
         
         <nav class="sidebar-nav">

@@ -41,7 +41,7 @@ def create_backup(db: Session, assignment_id: int = None):
         student_data = {
             "id": a.id,
             "student_name": a.student.name,
-            "student_age": a.student.age,
+            "student_birth_year": a.student.birth_year,
             "regular_teacher": a.student.regular_teacher,
             "team": a.team.name if a.team else None,
             "question_group": a.question_group.code if a.question_group else None,

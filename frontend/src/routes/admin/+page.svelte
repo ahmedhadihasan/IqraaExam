@@ -146,7 +146,7 @@
                 <div style="font-size: 2rem;">📝</div>
                 <div>
                     <div style="font-size: 1.75rem; font-weight: 700;">{summary?.pending_q10 || 0}</div>
-                    <div style="color: #64748b; font-size: 0.875rem;">چاوەڕوانی پ١٠</div>
+                    <div style="color: #64748b; font-size: 0.875rem;">چاوەڕوانی پرسیاری ١٠</div>
                 </div>
             </div>
         </div>
@@ -177,7 +177,7 @@
                     <thead>
                         <tr style="border-bottom: 2px solid #e2e8f0;">
                             <th style="padding: 0.75rem; text-align: right;">مامۆستا</th>
-                            <th style="padding: 0.75rem; text-align: right;">تیم</th>
+                            <th style="padding: 0.75rem; text-align: right;">لیژنە</th>
                             <th style="padding: 0.75rem; text-align: right;">قوتابیانی نمرەدراو</th>
                             <th style="padding: 0.75rem; text-align: right;">ناوەندی کات (خولەک)</th>
                         </tr>
@@ -208,7 +208,7 @@
             </a>
             <a href="/admin/q10" style="display: flex; flex-direction: column; align-items: center; padding: 1.5rem; background: white; border-radius: 12px; border: 1px solid #e2e8f0; text-decoration: none; color: inherit; transition: all 0.15s; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
                 <span style="font-size: 2rem; margin-bottom: 0.5rem;">✏️</span>
-                <span>نمرەدانی پ١٠</span>
+                <span>نمرەدانی پرسیاری ١٠</span>
             </a>
             <a href="/admin/results" style="display: flex; flex-direction: column; align-items: center; padding: 1.5rem; background: white; border-radius: 12px; border: 1px solid #e2e8f0; text-decoration: none; color: inherit; transition: all 0.15s; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
                 <span style="font-size: 2rem; margin-bottom: 0.5rem;">📥</span>

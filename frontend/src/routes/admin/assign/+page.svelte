@@ -192,7 +192,7 @@
                                     <option value="">-- قوتابی هەڵبژێرە --</option>
                                     {#each availableStudents as student}
                                         <option value={student.id}>
-                                            {student.name} (تەمەن: {student.age})
+                                            {student.name} {student.birth_year ? `(لەدایکبوون: ${student.birth_year})` : ''}
                                         </option>
                                     {/each}
                                 </select>
@@ -202,7 +202,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label class="form-label">دابەشکردن بۆ تیم</label>
+                                <label class="form-label">دابەشکردن بۆ لیژنە</label>
                                 <div class="team-buttons">
                                     {#each teams as team}
                                         <button 
@@ -256,11 +256,11 @@
                                     <span class="preview-value">{selectedStudentObj.name}</span>
                                 </div>
                                 <div class="preview-item">
-                                    <span class="preview-label">تەمەن:</span>
+                                    <span class="preview-label">لەدایکبوون:</span>
                                     <span class="preview-value">{selectedStudentObj.age}</span>
                                 </div>
                                 <div class="preview-item">
-                                    <span class="preview-label">مامۆستای ڕێکوپێک:</span>
+                                    <span class="preview-label">مامۆستای بابەت:</span>
                                     <span class="preview-value">{selectedStudentObj.regular_teacher}</span>
                                 </div>
                             {/if}
@@ -302,11 +302,11 @@
                                             <span class="badge team-badge">{assignment.team?.name}</span>
                                             <span class="badge group-badge">گرووپ {assignment.question_group?.code}</span>
                                             {#if assignment.exam_incomplete}
-                                                <span class="badge incomplete-badge">✗ تەواونەکرد</span>
+                                                <span class="badge incomplete-badge">✗ تەواونەکراو</span>
                                             {:else if assignment.is_completed}
                                                 <span class="badge completed-badge">✓ تەواوبوو</span>
                                             {:else if assignment.is_graded_teacher1 || assignment.is_graded_teacher2}
-                                                <span class="badge progress-badge">⏳ لە کارەکەدایە</span>
+                                                <span class="badge progress-badge">⏳ لە کارکردندایە</span>
                                             {/if}
                                         </div>
                                     </div>
@@ -323,7 +323,7 @@
                                             <button 
                                                 class="btn-icon incomplete" 
                                                 on:click={() => markIncomplete(assignment)}
-                                                title="تەواونەکرد"
+                                                title="تەواونەکراو"
                                             >
                                                 ✗
                                             </button>
@@ -364,7 +364,7 @@
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label class="form-label">تیم</label>
+                    <label class="form-label">لیژنە</label>
                     <div class="team-buttons">
                         {#each teams as team}
                             <button 
@@ -397,7 +397,7 @@
 
                 {#if editingAssignment.is_graded_teacher1 || editingAssignment.is_graded_teacher2}
                     <div class="warning-box">
-                        ⚠️ ئاگاداری: ئەگەر تیمەکە بگۆڕی، نمرەکانی پێشوو دەسڕێتەوە!
+                        ⚠️ ئاگاداری: ئەگەر لیژنەکە بگۆڕی، نمرەکانی پێشوو دەسڕێتەوە!
                     </div>
                 {/if}
             </div>

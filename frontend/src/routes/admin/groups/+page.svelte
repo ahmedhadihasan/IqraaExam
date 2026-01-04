@@ -160,7 +160,7 @@
                                 </div>
                             {/each}
                             <div class="mark-item q10">
-                                <span class="q-label">پ١٠</span>
+                                <span class="q-label">پرسیاری ١٠</span>
                                 <span class="q-marks">١٠</span>
                             </div>
                         </div>

@@ -87,11 +87,11 @@ async def import_students_csv(file: UploadFile = File(...), db: Session = Depend
     """
     Import students from CSV file
     Expected columns (Kurdish):
-    - ناوی سییانی (name)
-    - ژمارەی تەلەفۆن (phone)
-    - تەمەن (age)
-    - مامۆستای بابەت (regular_teacher)
-    - نمرەی پرسیاری ڡڠ (q10_mark) - optional
+    - ناوی سییانی (name) - REQUIRED
+    - ژمارەی تەلەفۆن (phone) - optional
+    - ساڵی لەدایکبوون (birth_year) - optional
+    - مامۆستای بابەت (regular_teacher) - optional
+    - نمرەی پرسیاری ١٠ (q10_mark) - optional
     """
     if not file.filename.endswith('.csv'):
         raise HTTPException(status_code=400, detail="فایلەکە دەبێت CSV بێت")
@@ -114,13 +114,15 @@ async def import_students_csv(file: UploadFile = File(...), db: Session = Depend
     column_map = {
         'ناوی سییانی': 'name',
         'ژمارەی تەلەفۆن': 'phone',
-        'تەمەن': 'age',
+        'ساڵی لەدایکبوون': 'birth_year',
+        'تەمەن': 'birth_year',  # Also accept old column name
         'مامۆستای بابەت': 'regular_teacher',
         'نمرەی پرسیاری ١٠': 'q10_mark',
         # Also allow English column names
         'name': 'name',
         'phone': 'phone',
-        'age': 'age',
+        'birth_year': 'birth_year',
+        'age': 'birth_year',
         'regular_teacher': 'regular_teacher',
         'q10_mark': 'q10_mark',
         'q10': 'q10_mark'
@@ -135,21 +137,28 @@ async def import_students_csv(file: UploadFile = File(...), db: Session = Depend
             for csv_col, value in row.items():
                 if csv_col and csv_col.strip() in column_map:
                     db_field = column_map[csv_col.strip()]
-                    if db_field == 'age' and value:
-                        student_data[db_field] = int(value)
+                    if db_field == 'birth_year' and value and value.strip():
+                        try:
+                            student_data[db_field] = int(value.strip())
+                        except ValueError:
+                            pass  # Invalid birth year, skip
                     elif db_field == 'q10_mark' and value and value.strip():
-                        q10_val = float(value)
-                        # Validate Q10 must be between 0 and 10
-                        if q10_val < 0 or q10_val > 10:
-                            student_data[db_field] = None  # Invalid, treat as empty
-                        else:
-                            student_data[db_field] = q10_val
+                        try:
+                            q10_val = float(value.strip())
+                            # Validate Q10 must be between 0 and 10
+                            if 0 <= q10_val <= 10:
+                                student_data[db_field] = q10_val
+                        except ValueError:
+                            pass  # Invalid Q10, skip
                     else:
-                        student_data[db_field] = value.strip() if value else None
+                        clean_value = value.strip() if value else None
+                        if clean_value:  # Only set if not empty
+                            student_data[db_field] = clean_value
             
+            # Only name is required
             if not student_data.get('name'):
                 errors.append(f"ڕیزی {row_num}: ناو بەتاڵە")
-                continue
+                continue  # Skip this row but continue with others
             
             db_student = Student(**student_data)
             db.add(db_student)
@@ -159,10 +168,16 @@ async def import_students_csv(file: UploadFile = File(...), db: Session = Depend
                 "id": db_student.id,
                 "name": db_student.name
             })
-        except ValueError as e:
-            errors.append(f"ڕیزی {row_num}: تەمەن دەبێت ژمارە بێت")
         except Exception as e:
+            db.rollback()  # Rollback only this row
             errors.append(f"ڕیزی {row_num}: {str(e)}")
+            continue  # Continue with next rows
+    
+    return {
+        "message": f"{len(students_created)} قوتابی زیادکرا",
+        "students_created": students_created,
+        "errors": errors
+    }
     
     return {
         "message": f"{len(students_created)} قوتابی زیادکرا",

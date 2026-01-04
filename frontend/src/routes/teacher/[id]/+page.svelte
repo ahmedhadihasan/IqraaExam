@@ -199,8 +199,8 @@
                         <div class="student-details">
                             <h3>{selectedAssignment.student.name}</h3>
                             <div class="detail-row">
-                                <span class="label">تەمەن:</span>
-                                <span>{selectedAssignment.student.age}</span>
+                                <span class="label">ساڵی لەدایکبوون:</span>
+                                <span>{selectedAssignment.student.birth_year || '-'}</span>
                             </div>
                             <div class="detail-row">
                                 <span class="label">مامۆستای وانە:</span>
@@ -274,7 +274,7 @@
                                     <div class="student-info">
                                         <strong>{assignment.student.name}</strong>
                                         <span class="student-meta">
-                                            تەمەن: {assignment.student.age} • 
+                                            لەدایکبوون: {assignment.student.birth_year || '-'} • 
                                             گرووپ {assignment.question_group.code}
                                         </span>
                                     </div>
@@ -291,7 +291,7 @@
                                     <div class="student-info">
                                         <strong>{assignment.student.name}</strong>
                                         <span class="student-meta">
-                                            تەمەن: {assignment.student.age} • 
+                                            لەدایکبوون: {assignment.student.birth_year || '-'} • 
                                             گرووپ {assignment.question_group.code}
                                         </span>
                                     </div>
