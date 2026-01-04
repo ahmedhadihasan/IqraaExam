@@ -41,12 +41,15 @@ def seed_database():
             db.add_all(teachers)
             db.commit()
             
-            # Create Question Groups
+            # Create Question Groups (A-G)
             groups = [
                 QuestionGroup(name="گروپی A", code="A", marks_structure={"q1": 4, "q2": 10, "q3": 8, "q4": 12, "q5": 16, "q6": 10, "q7": 8, "q8": 9, "q9": 13}, total_marks=90),
                 QuestionGroup(name="گروپی B", code="B", marks_structure={"q1": 10, "q2": 8, "q3": 10, "q4": 14, "q5": 9, "q6": 12, "q7": 7, "q8": 10, "q9": 10}, total_marks=90),
                 QuestionGroup(name="گروپی C", code="C", marks_structure={"q1": 10, "q2": 10, "q3": 9, "q4": 11, "q5": 10, "q6": 17, "q7": 6, "q8": 8, "q9": 9}, total_marks=90),
-                QuestionGroup(name="گروپی D", code="D", marks_structure={"q1": 9, "q2": 9, "q3": 8, "q4": 10, "q5": 12, "q6": 14, "q7": 9, "q8": 9, "q9": 10}, total_marks=90),
+                QuestionGroup(name="گروپی D", code="D", marks_structure={"q1": 8, "q2": 8, "q3": 10, "q4": 24, "q5": 4, "q6": 8, "q7": 8, "q8": 7, "q9": 13}, total_marks=90),
+                QuestionGroup(name="گروپی E", code="E", marks_structure={"q1": 8, "q2": 10, "q3": 10, "q4": 8, "q5": 12, "q6": 5, "q7": 7, "q8": 19, "q9": 11}, total_marks=90),
+                QuestionGroup(name="گروپی F", code="F", marks_structure={"q1": 8, "q2": 7, "q3": 10, "q4": 23, "q5": 8, "q6": 7, "q7": 13, "q8": 7, "q9": 7}, total_marks=90),
+                QuestionGroup(name="گروپی G", code="G", marks_structure={"q1": 8, "q2": 7, "q3": 10, "q4": 10, "q5": 7, "q6": 9, "q7": 13, "q8": 5, "q9": 21}, total_marks=90),
             ]
             db.add_all(groups)
             db.commit()
@@ -56,7 +59,7 @@ def seed_database():
             db.add(session)
             db.commit()
             
-            print("✅ Database seeded successfully!")
+            print("✅ Database seeded with 4 teams, 8 teachers, 7 question groups!")
         else:
             print("📦 Database already has data, skipping seed")
     except Exception as e:
