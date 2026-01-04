@@ -88,7 +88,7 @@
         if (editingStudent.q10_mark !== '' && editingStudent.q10_mark !== null && editingStudent.q10_mark !== undefined) {
             q10Value = parseFloat(editingStudent.q10_mark);
             if (isNaN(q10Value) || q10Value < 0 || q10Value > 10) {
-                showError('نمرەی Q10 دەبێت لە نێوان ڠ تا ڡڠ بێت');
+                showError('نمرەی پرسیاری دەیەم دەبێت لە نێوان ٠ تا ١٠ بێت');
                 return;
             }
         }
@@ -212,10 +212,10 @@
                         <p>ستوونەکانی فایلی CSV:</p>
                         <ul>
                             <li><strong>ناوی سییانی</strong> - ناوی تەواوی قوتابی <span class="required">(پێویست)</span></li>
-                            <li><strong>ژمارەی تەلەفۆن</strong> - ژمارەی مۆبایل (ئیختیاری)</li>
-                            <li><strong>ساڵی لەدایکبوون</strong> - ساڵی لەدایکبوون وەک ٢٠١٠ (ئیختیاری)</li>
-                            <li><strong>مامۆستای بابەت</strong> - ناوی مامۆستای ڕێکوپێک (ئیختیاری)</li>
-                            <li><strong>نمرەی پرسیاری ١٠</strong> - نمرەی Q10 لە ٠ تا ١٠ (ئیختیاری)</li>
+                            <li><strong>ژمارەی تەلەفۆن</strong> - ژمارەی مۆبایل (ئارەزوومەندانە)</li>
+                            <li><strong>ساڵی لەدایکبوون</strong> - ساڵی لەدایکبوون وەک ٢٠١٠ (ئارەزوومەندانە)</li>
+                            <li><strong>مامۆستای بابەت</strong> - ناوی مامۆستای ڕێکوپێک (ئارەزوومەندانە)</li>
+                            <li><strong>نمرەی پرسیاری ١٠</strong> - نمرەی پرسیاری دەیەم لە ٠ تا ١٠ (ئارەزوومەندانە)</li>
                         </ul>
                         <button class="btn btn-link" on:click={downloadTemplate}>
                             ⬇️ داگرتنی نموونەی CSV
@@ -292,7 +292,7 @@
                         />
                     </div>
                     <div class="form-group">
-                        <label class="form-label">ساڵی لەدایکبوون (ئیختیاری)</label>
+                        <label class="form-label">ساڵی لەدایکبوون (ئارەزوومەندانە)</label>
                         <input 
                             type="number" 
                             class="form-input" 
@@ -301,7 +301,7 @@
                         />
                     </div>
                     <div class="form-group">
-                        <label class="form-label">مامۆستای ڕێکوپێک</label>
+                        <label class="form-label">مامۆستای بابەت</label>
                         <input 
                             type="text" 
                             class="form-input" 
@@ -309,7 +309,7 @@
                         />
                     </div>
                     <div class="form-group">
-                        <label class="form-label">نمرەی پرسیاری ڡڠ (ئیختیاری)</label>
+                        <label class="form-label">نمرەی پرسیاری ١٠ (ئارەزوومەندانە)</label>
                         <input 
                             type="number" 
                             class="form-input" 
@@ -362,7 +362,7 @@
                         />
                     </div>
                     <div class="form-group">
-                        <label class="form-label">ساڵی لەدایکبوون (ئیختیاری)</label>
+                        <label class="form-label">ساڵی لەدایکبوون (ئارەزوومەندانە)</label>
                         <input 
                             type="number" 
                             class="form-input" 
@@ -371,16 +371,16 @@
                         />
                     </div>
                     <div class="form-group">
-                        <label class="form-label">مامۆستای ڕێکوپێک</label>
+                        <label class="form-label">مامۆستای بابەت</label>
                         <input 
                             type="text" 
                             class="form-input" 
                             bind:value={newStudent.regular_teacher}
-                            placeholder="ناوی مامۆستای ڕێکوپێکی"
+                            placeholder="ناوی مامۆستای بابەت"
                         />
                     </div>
                     <div class="form-group">
-                        <label class="form-label">نمرەی پرسیاری ڡڠ (ئیختیاری)</label>
+                        <label class="form-label">نمرەی پرسیاری ١٠ (ئارەزوومەندانە)</label>
                         <input 
                             type="number" 
                             class="form-input" 
@@ -436,8 +436,8 @@
                             <th>ناو</th>
                             <th>تەلەفۆن</th>
                             <th>ساڵی لەدایکبوون</th>
-                            <th>مامۆستای ڕێکوپێک</th>
-                            <th>Q10</th>
+                            <th>مامۆستای بابەت</th>
+                            <th>نمرەی پرسیاری ١٠</th>
                             <th>کردارەکان</th>
                         </tr>
                     </thead>
@@ -448,8 +448,8 @@
                                 <td data-label="ناو">{student.name}</td>
                                 <td data-label="تەلەفۆن">{student.phone || '-'}</td>
                                 <td data-label="ساڵی لەدایکبوون">{student.birth_year || '-'}</td>
-                                <td data-label="مامۆستای ڕێکوپێک">{student.regular_teacher || '-'}</td>
-                                <td data-label="Q10">
+                                <td data-label="مامۆستای بابەت">{student.regular_teacher || '-'}</td>
+                                <td data-label="نمرەی پرسیاری ١٠">
                                     {#if student.q10_mark !== null && student.q10_mark !== undefined}
                                         <span style="color: #10b981; font-weight: 600;">{student.q10_mark}</span>
                                     {:else}

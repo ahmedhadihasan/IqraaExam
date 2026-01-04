@@ -20,7 +20,7 @@
         try {
             teams = await teamsAPI.getAll();
         } catch (error) {
-            showError('نەتوانرا تیمەکان بهێنرێت');
+            showError('نەتوانرا لیژنەکان بهێنرێت');
         } finally {
             loading = false;
         }
@@ -38,19 +38,19 @@
 
     async function updateTeam() {
         if (!editingTeam.name) {
-            showError('تکایە ناوی تیم بنووسە');
+            showError('تکایە ناوی لیژنە بنووسە');
             return;
         }
 
         submitting = true;
         try {
             await teamsAPI.update(editingTeam.id, { name: editingTeam.name });
-            showNotification('تیم بە سەرکەوتوویی نوێکرایەوە');
+            showNotification('لیژنە بە سەرکەوتوویی نوێکرایەوە');
             showTeamModal = false;
             editingTeam = null;
             await loadTeams();
         } catch (error) {
-            showError('نەتوانرا تیم نوێبکرێتەوە');
+            showError('نەتوانرا لیژنە نوێبکرێتەوە');
         } finally {
             submitting = false;
         }
@@ -84,7 +84,7 @@
 
 <div class="teachers-page">
     <h1>مامۆستاکان</h1>
-    <p class="subtitle">بەڕێوەبردنی تیمەکان و مامۆستاکانیان</p>
+    <p class="subtitle">بەڕێوەبردنی لیژنەکان و مامۆستاکان</p>
 
     <!-- Edit Team Modal -->
     {#if showTeamModal && editingTeam}
@@ -93,12 +93,12 @@
             <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
             <div class="modal" on:click|stopPropagation>
                 <div class="modal-header">
-                    <h2>دەستکاریکردنی تیم</h2>
+                    <h2>دەستکاریکردنی لیژنە</h2>
                     <button class="modal-close" on:click={() => showTeamModal = false}>✕</button>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label class="form-label">ناوی تیم</label>
+                        <label class="form-label">ناوی لیژنە</label>
                         <input 
                             type="text" 
                             class="form-input" 
