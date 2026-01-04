@@ -1,0 +1,28 @@
+services:
+  # Backend API (FastAPI)
+  - type: web
+    name: iqraa-api
+    runtime: python
+    region: frankfurt
+    plan: free
+    buildCommand: cd backend && pip install -r requirements.txt
+    startCommand: cd backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11"
+      - key: DATABASE_URL
+        value: sqlite:///./iqraa_exam.db
+
+  # Frontend (SvelteKit)
+  - type: web
+    name: iqraa-frontend
+    runtime: node
+    region: frankfurt
+    plan: free
+    buildCommand: cd frontend && npm install && npm run build
+    startCommand: cd frontend && node build
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      - key: VITE_API_URL
+        sync: false  # Will be set manually after backend deploys

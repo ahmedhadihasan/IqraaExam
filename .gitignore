@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+backend/venv/
+venv/
+.env
+*.db
+
+# Keep a sample database for testing
+!backend/iqraa_exam_sample.db
+
+# Node
+node_modules/
+frontend/node_modules/
+frontend/.svelte-kit/
+frontend/build/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Backups (optional - remove if you want to track)
+backend/backups/
+
+# Temp files
+*.log
+*.tmp
