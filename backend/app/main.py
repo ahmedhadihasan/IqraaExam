@@ -19,24 +19,24 @@ def seed_database():
             
             # Create Teams
             teams_data = [
-                Team(name="تیمی ١"),
-                Team(name="تیمی ٢"),
-                Team(name="تیمی ٣"),
-                Team(name="تیمی ٤"),
+                Team(name="لیژنەی یەکەم"),
+                Team(name="لیژنەی دووەم"),
+                Team(name="لیژنەی سێیەم"),
+                Team(name="لیژنەی چوارەم"),
             ]
             db.add_all(teams_data)
             db.commit()
             
             # Create Teachers (2 per team)
             teachers = [
-                Teacher(name="مامۆستا ١", team_id=1, position=1),
-                Teacher(name="مامۆستا ٢", team_id=1, position=2),
-                Teacher(name="مامۆستا ٣", team_id=2, position=1),
-                Teacher(name="مامۆستا ٤", team_id=2, position=2),
-                Teacher(name="مامۆستا ٥", team_id=3, position=1),
-                Teacher(name="مامۆستا ٦", team_id=3, position=2),
-                Teacher(name="مامۆستا ٧", team_id=4, position=1),
-                Teacher(name="مامۆستا ٨", team_id=4, position=2),
+                Teacher(name="م. ام ارشد", team_id=1, position=1),
+                Teacher(name="م.تافان", team_id=1, position=2),
+                Teacher(name="م.باسیمە", team_id=2, position=1),
+                Teacher(name="م.نەرمین", team_id=2, position=2),
+                Teacher(name="د.شیلان", team_id=3, position=1),
+                Teacher(name="م.صبيحه", team_id=3, position=2),
+                Teacher(name="م.عظيمة", team_id=4, position=1),
+                Teacher(name="پەیام", team_id=4, position=2),
             ]
             db.add_all(teachers)
             db.commit()
