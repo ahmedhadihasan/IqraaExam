@@ -103,12 +103,12 @@
                         <tr>
                             <th>قوتابی</th>
                             <th>لەدایکبوون</th>
-                            <th>تیم</th>
+                            <th>لیژنە</th>
                             <th>گرووپ</th>
-                            <th>مامۆستا ١</th>
-                            <th>مامۆستا ٢</th>
+                            <th>سەرۆکی لیژنە </th>
+                            <th>ئەندام لیژنە </th>
                             <th>ناوەند پ١-پ٩</th>
-                            <th>پ١٠</th>
+                            <th>پرسیاری ١٠</th>
                             <th>کۆی گشتی</th>
                             <th>بارودۆخ</th>
                         </tr>
@@ -121,26 +121,26 @@
                             <tr>
                                 <td data-label="قوتابی"><strong>{r.student_name}</strong></td>
                                 <td data-label="لەدایکبوون">{r.student_birth_year || '-'}</td>
-                                <td data-label="تیم">{r.team_name}</td>
+                                <td data-label="لیژنە">{r.team_name}</td>
                                 <td data-label="گرووپ">
                                     <span class="badge badge-primary">{r.question_group}</span>
                                 </td>
-                                <td data-label="مامۆستا ١" class="text-center">{t1Total ?? '-'}</td>
-                                <td data-label="مامۆستا ٢" class="text-center">{t2Total ?? '-'}</td>
+                                <td data-label="سەرۆکی لیژنە " class="text-center">{t1Total ?? '-'}</td>
+                                <td data-label="ئەندام لیژنە " class="text-center">{t2Total ?? '-'}</td>
                                 <td data-label="ناوەند" class="text-center font-bold">{r.total_average_q1_q9 ?? '-'}</td>
-                                <td data-label="پ١٠" class="text-center">{r.q10_mark ?? '-'}</td>
+                                <td data-label="پرسیاری ١٠" class="text-center">{r.q10_mark ?? '-'}</td>
                                 <td data-label="کۆی گشتی" class="text-center">
                                     <span class="total-mark">{r.final_total ?? '-'}</span>
                                 </td>
                                 <td data-label="بارودۆخ">
                                     {#if status === 'incomplete'}
-                                        <span class="badge badge-incomplete">تەواونەکرد</span>
+                                        <span class="badge badge-incomplete">تەواونەکراو</span>
                                     {:else if status === 'passed'}
                                         <span class="badge badge-passed">دەرچوو ✓</span>
                                     {:else if status === 'failed'}
-                                        <span class="badge badge-failed">نەدەرچوو</span>
+                                        <span class="badge badge-failed">دەرنەچوو</span>
                                     {:else if status === 'waiting-q10'}
-                                        <span class="badge badge-pending">چاوەڕوانی پ١٠</span>
+                                        <span class="badge badge-pending">چاوەڕوانی پرسیاری ١٠</span>
                                     {:else if status === 'partial'}
                                         <span class="badge badge-pending">نیوەچڕ</span>
                                     {:else}

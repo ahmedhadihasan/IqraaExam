@@ -128,10 +128,18 @@
         }
     }
 
+    const kurdishMonths = [
+        'کانوونی دووەم', 'شوبات', 'ئازار', 'نیسان', 'ئایار', 'حوزەیران',
+        'تەممووز', 'ئاب', 'ئەیلوول', 'تشرینی یەکەم', 'تشرینی دووەم', 'کانوونی یەکەم'
+    ];
+
     function formatDate(dateStr) {
         if (!dateStr) return '-';
         const date = new Date(dateStr);
-        return date.toLocaleDateString('ku', { year: 'numeric', month: 'long', day: 'numeric' });
+        const day = date.getDate();
+        const month = kurdishMonths[date.getMonth()];
+        const year = date.getFullYear();
+        return `${day} ${month} ${year}`;
     }
 
     function getTeacherRoles(teachersPerRoom) {

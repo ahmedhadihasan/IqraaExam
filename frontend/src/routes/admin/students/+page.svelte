@@ -46,7 +46,7 @@
         if (newStudent.q10_mark !== '' && newStudent.q10_mark !== null) {
             q10Value = parseFloat(newStudent.q10_mark);
             if (isNaN(q10Value) || q10Value < 0 || q10Value > 10) {
-                showError('نمرەی Q10 دەبێت لە نێوان ڠ تا ڡڠ بێت');
+                showError('نمرەی پرسیاری دەیەم دەبێت لە نێوان ٠ تا ١٠ بێت');
                 return;
             }
         }
