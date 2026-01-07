@@ -31,6 +31,7 @@ async function fetchAPI(endpoint, options = {}) {
 // ========== Teams API ==========
 export const teamsAPI = {
     getAll: () => fetchAPI('/teams/'),
+    getForActiveSession: () => fetchAPI('/teams/for-active-session'),
     get: (id) => fetchAPI(`/teams/${id}`),
     create: (data) => fetchAPI('/teams/', { method: 'POST', body: JSON.stringify(data) }),
     update: (id, data) => fetchAPI(`/teams/${id}`, { method: 'PUT', body: JSON.stringify(data) }),

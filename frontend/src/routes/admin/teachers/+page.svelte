@@ -1,9 +1,10 @@
 <script>
     import { onMount } from 'svelte';
-    import { teamsAPI } from '$lib/api.js';
+    import { teamsAPI, examSessionsAPI } from '$lib/api.js';
     import { showNotification, showError } from '$lib/stores.js';
 
     let teams = [];
+    let activeSession = null;
     let loading = true;
 
     // Edit modals
@@ -13,12 +14,26 @@
     let editingTeacher = null;
     let submitting = false;
 
-    onMount(loadTeams);
+    onMount(loadData);
+
+    async function loadData() {
+        loading = true;
+        try {
+            // Get active session first
+            activeSession = await examSessionsAPI.getActive();
+            // Get teams for active session (filtered by num_rooms)
+            teams = await teamsAPI.getForActiveSession();
+        } catch (error) {
+            showError('نەتوانرا لیژنەکان بهێنرێت');
+        } finally {
+            loading = false;
+        }
+    }
 
     async function loadTeams() {
         loading = true;
         try {
-            teams = await teamsAPI.getAll();
+            teams = await teamsAPI.getForActiveSession();
         } catch (error) {
             showError('نەتوانرا لیژنەکان بهێنرێت');
         } finally {
@@ -85,6 +100,14 @@
 <div class="teachers-page">
     <h1>مامۆستاکان</h1>
     <p class="subtitle">بەڕێوەبردنی لیژنەکان و مامۆستاکان</p>
+    
+    {#if activeSession}
+        <div class="session-info-bar">
+            <span class="session-badge">📅 {activeSession.name}</span>
+            <span class="session-config">🚪 {activeSession.num_rooms} ژوور</span>
+            <span class="session-config">👥 {activeSession.teachers_per_room} مامۆستا لە هەر ژوورێک</span>
+        </div>
+    {/if}
 
     <!-- Edit Team Modal -->
     {#if showTeamModal && editingTeam}
@@ -173,7 +196,7 @@
                         </button>
                     </div>
                     <div class="team-body">
-                        {#each team.teachers as teacher}
+                        {#each team.teachers.filter(t => !activeSession || t.position <= (activeSession.teachers_per_room || 2)) as teacher}
                             <div class="teacher-row">
                                 <div class="teacher-info">
                                     <span class="teacher-position">مامۆستای {teacher.position}</span>
@@ -200,7 +223,36 @@
 <style>
     .subtitle {
         color: var(--text-light);
+        margin-bottom: 1rem;
+    }
+
+    .session-info-bar {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        flex-wrap: wrap;
+        padding: 0.75rem 1rem;
+        background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+        border: 1px solid #bae6fd;
+        border-radius: 8px;
         margin-bottom: 2rem;
+    }
+
+    .session-badge {
+        background: var(--primary);
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+
+    .session-config {
+        color: var(--text);
+        font-size: 0.875rem;
+        padding: 0.25rem 0.5rem;
+        background: white;
+        border-radius: 4px;
     }
 
     .teams-grid {

@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
 from ..database import get_db
-from ..models import Team, Teacher
+from ..models import Team, Teacher, ExamSession
 from ..schemas import (
     TeamCreate, TeamResponse,
     TeacherCreate, TeacherResponse, TeacherWithTeam
@@ -16,6 +16,22 @@ router = APIRouter(prefix="/teams", tags=["Teams & Teachers"])
 def get_all_teams(db: Session = Depends(get_db)):
     """Get all teams"""
     return db.query(Team).all()
+
+
+@router.get("/for-active-session", response_model=List[TeamResponse])
+def get_teams_for_active_session(db: Session = Depends(get_db)):
+    """Get teams based on the active session's num_rooms setting"""
+    # Get active session
+    active_session = db.query(ExamSession).filter(ExamSession.is_active == True).first()
+    
+    if active_session:
+        num_rooms = active_session.num_rooms or 4
+        # Get only the first N teams based on num_rooms
+        teams = db.query(Team).order_by(Team.id).limit(num_rooms).all()
+        return teams
+    else:
+        # No active session, return all teams
+        return db.query(Team).all()
 
 
 @router.post("/", response_model=TeamResponse)
