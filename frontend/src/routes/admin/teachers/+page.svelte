@@ -10,8 +10,10 @@
     // Edit modals
     let showTeamModal = false;
     let showTeacherModal = false;
+    let showAddTeacherModal = false;
     let editingTeam = null;
     let editingTeacher = null;
+    let newTeacher = { name: '', team_id: null, position: null };
     let submitting = false;
 
     onMount(loadData);
@@ -38,6 +40,43 @@
             showError('نەتوانرا لیژنەکان بهێنرێت');
         } finally {
             loading = false;
+        }
+    }
+
+    // Get teacher positions needed based on session
+    function getRequiredPositions() {
+        return activeSession?.teachers_per_room || 2;
+    }
+
+    // Get teacher for a specific position in a team
+    function getTeacherAtPosition(team, position) {
+        return team.teachers.find(t => t.position === position);
+    }
+
+    // Open add teacher modal for a specific position
+    function openAddTeacher(team, position) {
+        newTeacher = { name: '', team_id: team.id, position: position };
+        showAddTeacherModal = true;
+    }
+
+    // Create new teacher
+    async function createTeacher() {
+        if (!newTeacher.name) {
+            showError('تکایە ناوی مامۆستا بنووسە');
+            return;
+        }
+
+        submitting = true;
+        try {
+            await teamsAPI.createTeacher(newTeacher);
+            showNotification('مامۆستا بە سەرکەوتوویی زیادکرا');
+            showAddTeacherModal = false;
+            newTeacher = { name: '', team_id: null, position: null };
+            await loadTeams();
+        } catch (error) {
+            showError('نەتوانرا مامۆستا زیادبکرێت');
+        } finally {
+            submitting = false;
         }
     }
 
@@ -181,6 +220,43 @@
         </div>
     {/if}
 
+    <!-- Add Teacher Modal -->
+    {#if showAddTeacherModal}
+        <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
+        <div class="modal-overlay" on:click={() => showAddTeacherModal = false}>
+            <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
+            <div class="modal" on:click|stopPropagation>
+                <div class="modal-header">
+                    <h2>زیادکردنی مامۆستا (شوێنی {newTeacher.position})</h2>
+                    <button class="modal-close" on:click={() => showAddTeacherModal = false}>✕</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="form-label">ناوی مامۆستا</label>
+                        <input 
+                            type="text" 
+                            class="form-input" 
+                            bind:value={newTeacher.name}
+                            placeholder="ناوی مامۆستا بنووسە..."
+                        />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" on:click={() => showAddTeacherModal = false}>
+                        پاشگەزبوونەوە
+                    </button>
+                    <button 
+                        class="btn btn-success" 
+                        on:click={createTeacher}
+                        disabled={submitting}
+                    >
+                        {submitting ? 'زیادکردن...' : 'زیادکردن'}
+                    </button>
+                </div>
+            </div>
+        </div>
+    {/if}
+
     {#if loading}
         <div class="loading">
             <div class="spinner"></div>
@@ -196,22 +272,36 @@
                         </button>
                     </div>
                     <div class="team-body">
-                        {#each team.teachers.filter(t => !activeSession || t.position <= (activeSession.teachers_per_room || 2)) as teacher}
+                        {#each Array(getRequiredPositions()) as _, i}
+                            {@const position = i + 1}
+                            {@const teacher = getTeacherAtPosition(team, position)}
                             <div class="teacher-row">
                                 <div class="teacher-info">
-                                    <span class="teacher-position">مامۆستای {teacher.position}</span>
-                                    <span class="teacher-name">{teacher.name}</span>
+                                    <span class="teacher-position">مامۆستای {position}</span>
+                                    {#if teacher}
+                                        <span class="teacher-name">{teacher.name}</span>
+                                    {:else}
+                                        <span class="teacher-name empty">— بەتاڵ —</span>
+                                    {/if}
                                 </div>
-                                <button 
-                                    class="btn btn-secondary btn-sm"
-                                    on:click={() => openEditTeacher(teacher)}
-                                    title="دەستکاریکردن"
-                                >
-                                    ✏️
-                                </button>
+                                {#if teacher}
+                                    <button 
+                                        class="btn btn-secondary btn-sm"
+                                        on:click={() => openEditTeacher(teacher)}
+                                        title="دەستکاریکردن"
+                                    >
+                                        ✏️
+                                    </button>
+                                {:else}
+                                    <button 
+                                        class="btn btn-success btn-sm"
+                                        on:click={() => openAddTeacher(team, position)}
+                                        title="زیادکردن"
+                                    >
+                                        ➕
+                                    </button>
+                                {/if}
                             </div>
-                        {:else}
-                            <p class="no-teachers">هیچ مامۆستایەک نییە</p>
                         {/each}
                     </div>
                 </div>
@@ -328,6 +418,12 @@
 
     .teacher-name {
         font-weight: 500;
+    }
+
+    .teacher-name.empty {
+        color: var(--text-light);
+        font-style: italic;
+        opacity: 0.7;
     }
 
     .no-teachers {
