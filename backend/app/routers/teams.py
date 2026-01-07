@@ -87,6 +87,29 @@ def get_all_teachers(db: Session = Depends(get_db)):
     return teachers
 
 
+@router.get("/teachers/for-active-session", response_model=List[TeacherWithTeam])
+def get_teachers_for_active_session(db: Session = Depends(get_db)):
+    """Get teachers filtered by active session's num_rooms and teachers_per_room"""
+    active_session = db.query(ExamSession).filter(ExamSession.is_active == True).first()
+    
+    if active_session:
+        num_rooms = active_session.num_rooms or 4
+        teachers_per_room = active_session.teachers_per_room or 2
+        
+        # Get team IDs for the active session (first N teams)
+        team_ids = [t.id for t in db.query(Team).order_by(Team.id).limit(num_rooms).all()]
+        
+        # Get teachers for those teams, filtered by position
+        teachers = db.query(Teacher).filter(
+            Teacher.team_id.in_(team_ids),
+            Teacher.position <= teachers_per_room
+        ).all()
+        return teachers
+    else:
+        # No active session, return all teachers
+        return db.query(Teacher).all()
+
+
 @router.get("/{team_id}/teachers", response_model=List[TeacherResponse])
 def get_team_teachers(team_id: int, db: Session = Depends(get_db)):
     """Get all teachers in a specific team"""

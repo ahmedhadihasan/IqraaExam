@@ -7,7 +7,8 @@
 
     onMount(async () => {
         try {
-            teachers = await teamsAPI.getAllTeachers();
+            // Get only teachers for the active session (filtered by num_rooms and teachers_per_room)
+            teachers = await teamsAPI.getTeachersForActiveSession();
         } catch (error) {
             console.error('Failed to load teachers:', error);
         } finally {
@@ -52,7 +53,7 @@
                             <a href="/teacher/{teacher.id}" class="teacher-link">
                                 <div class="teacher-info">
                                     <span class="teacher-name">{teacher.name}</span>
-                                    <span class="teacher-position">{teacher.position === 1 ? 'سەرۆک لیژنە' : 'ئەندام لیژنە'}</span>
+                                    <span class="teacher-position">مامۆستای {teacher.position}</span>
                                 </div>
                                 <span class="teacher-arrow">←</span>
                             </a>

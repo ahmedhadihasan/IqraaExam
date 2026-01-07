@@ -39,6 +39,7 @@ export const teamsAPI = {
     
     // Teachers
     getAllTeachers: () => fetchAPI('/teams/teachers/all'),
+    getTeachersForActiveSession: () => fetchAPI('/teams/teachers/for-active-session'),
     getTeamTeachers: (teamId) => fetchAPI(`/teams/${teamId}/teachers`),
     createTeacher: (data) => fetchAPI('/teams/teachers', { method: 'POST', body: JSON.stringify(data) }),
     getTeacher: (id) => fetchAPI(`/teams/teachers/${id}`),

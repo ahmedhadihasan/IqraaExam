@@ -37,7 +37,7 @@
         try {
             [students, teams, questionGroups, activeSession] = await Promise.all([
                 studentsAPI.getAll(),
-                teamsAPI.getAll(),
+                teamsAPI.getForActiveSession(),
                 questionGroupsAPI.getAll(),
                 examSessionsAPI.getActive()
             ]);
