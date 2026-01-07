@@ -109,10 +109,20 @@
     async function setActive(id) {
         try {
             await examSessionsAPI.activate(id);
-            showNotification('دانیشتنی چالاک گۆڕدرا');
+            showNotification('دانیشتن چالاککرا - ئێستا قوتابیانی ئەم دانیشتنە پیشان دەدرێن');
             await loadSessions();
         } catch (error) {
             showError('نەتوانرا دانیشتنی چالاک بگۆڕدرێت');
+        }
+    }
+
+    async function deactivateSession(id) {
+        try {
+            await examSessionsAPI.deactivate(id);
+            showNotification('دانیشتن ناچالاککرا');
+            await loadSessions();
+        } catch (error) {
+            showError('نەتوانرا دانیشتن ناچالاک بکرێت');
         }
     }
 
@@ -317,15 +327,18 @@
                             <button class="btn btn-outline btn-sm" on:click={() => openEditModal(session)}>
                                 ✏️ دەستکاری
                             </button>
-                            {#if !session.is_active}
+                            {#if session.is_active}
+                                <button class="btn btn-warning btn-sm" on:click={() => deactivateSession(session.id)}>
+                                    ⏸️ ناچالاککردن
+                                </button>
+                                <span class="current-label">دانیشتنی ئێستا</span>
+                            {:else}
                                 <button class="btn btn-success btn-sm" on:click={() => setActive(session.id)}>
-                                    ✓ چالاککردن
+                                    ▶️ چالاککردن
                                 </button>
                                 <button class="btn btn-danger btn-sm" on:click={() => deleteSession(session.id)}>
                                     🗑️
                                 </button>
-                            {:else}
-                                <span class="current-label">دانیشتنی ئێستا</span>
                             {/if}
                         </div>
                     </div>
@@ -595,6 +608,18 @@
     .btn-sm {
         padding: 0.375rem 0.75rem;
         font-size: 0.75rem;
+    }
+
+    .btn-warning {
+        background: linear-gradient(135deg, #f59e0b, #d97706);
+        color: white;
+        border: none;
+    }
+
+    .btn-warning:hover {
+        background: linear-gradient(135deg, #d97706, #b45309);
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
     }
 
     .empty-state {

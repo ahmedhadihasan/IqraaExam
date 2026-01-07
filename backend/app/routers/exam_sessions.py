@@ -80,6 +80,19 @@ def activate_session(session_id: int, db: Session = Depends(get_db)):
     return session
 
 
+@router.put("/{session_id}/deactivate", response_model=ExamSessionResponse)
+def deactivate_session(session_id: int, db: Session = Depends(get_db)):
+    """Deactivate a session"""
+    session = db.query(ExamSession).filter(ExamSession.id == session_id).first()
+    if not session:
+        raise HTTPException(status_code=404, detail="Exam session not found")
+    
+    session.is_active = False
+    db.commit()
+    db.refresh(session)
+    return session
+
+
 @router.delete("/{session_id}")
 def delete_exam_session(session_id: int, db: Session = Depends(get_db)):
     """Delete an exam session"""

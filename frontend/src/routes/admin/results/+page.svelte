@@ -1,18 +1,23 @@
 <script>
     import { onMount } from 'svelte';
-    import { reportsAPI, examSessionsAPI } from '$lib/api.js';
+    import { reportsAPI, examSessionsAPI, studentsAPI } from '$lib/api.js';
     import { showError } from '$lib/stores.js';
 
     let results = [];
     let activeSession = null;
+    let totalRegisteredStudents = 0;
     let loading = true;
 
     onMount(async () => {
         try {
-            [results, activeSession] = await Promise.all([
+            const [resultsData, session, allStudents] = await Promise.all([
                 reportsAPI.getStudentResults(),
-                examSessionsAPI.getActive()
+                examSessionsAPI.getActive(),
+                studentsAPI.getAll()
             ]);
+            results = resultsData;
+            activeSession = session;
+            totalRegisteredStudents = allStudents.length;
         } catch (error) {
             console.error('Error loading results:', error);
             showError('نەتوانرا ئەنجامەکان بهێنرێت');
@@ -74,9 +79,13 @@
         </div>
     {:else}
         <div class="results-summary mb-4">
+            <div class="summary-card registered">
+                <span class="summary-value">{totalRegisteredStudents}</span>
+                <span class="summary-label">گشت قوتابییان</span>
+            </div>
             <div class="summary-card">
                 <span class="summary-value">{results.length}</span>
-                <span class="summary-label">کۆی قوتابیان</span>
+                <span class="summary-label">کۆی تاقیکراوان</span>
             </div>
             <div class="summary-card passed">
                 <span class="summary-value">{results.filter(r => getStatus(r) === 'passed').length}</span>
@@ -186,7 +195,7 @@
 
     .results-summary {
         display: grid;
-        grid-template-columns: repeat(5, 1fr);
+        grid-template-columns: repeat(6, 1fr);
         gap: 1rem;
     }
 
@@ -196,6 +205,13 @@
         border-radius: 12px;
         padding: 1.25rem;
         text-align: center;
+    }
+    
+    .summary-card.registered {
+        border-color: #6366f1;
+    }
+    .summary-card.registered .summary-value {
+        color: #6366f1;
     }
 
     .summary-value {
@@ -283,7 +299,7 @@
 
     @media (max-width: 768px) {
         .results-summary {
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(3, 1fr);
         }
 
         .table thead {

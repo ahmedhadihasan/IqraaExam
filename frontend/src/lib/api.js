@@ -89,6 +89,7 @@ export const examSessionsAPI = {
     create: (data) => fetchAPI('/exam-sessions/', { method: 'POST', body: JSON.stringify(data) }),
     update: (id, data) => fetchAPI(`/exam-sessions/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
     activate: (id) => fetchAPI(`/exam-sessions/${id}/activate`, { method: 'PUT' }),
+    deactivate: (id) => fetchAPI(`/exam-sessions/${id}/deactivate`, { method: 'PUT' }),
     delete: (id) => fetchAPI(`/exam-sessions/${id}`, { method: 'DELETE' }),
 };
 
