@@ -118,6 +118,8 @@ async def import_students_csv(file: UploadFile = File(...), db: Session = Depend
         'تەمەن': 'birth_year',  # Also accept old column name
         'مامۆستای بابەت': 'regular_teacher',
         'نمرەی پرسیاری ١٠': 'q10_mark',
+        'وەرزی دووەم': 'is_second_term',  # Second term flag
+        'گرووپی پێشوو': 'previous_question_group',  # Previous question group
         # Also allow English column names
         'name': 'name',
         'phone': 'phone',
@@ -125,7 +127,11 @@ async def import_students_csv(file: UploadFile = File(...), db: Session = Depend
         'age': 'birth_year',
         'regular_teacher': 'regular_teacher',
         'q10_mark': 'q10_mark',
-        'q10': 'q10_mark'
+        'q10': 'q10_mark',
+        'is_second_term': 'is_second_term',
+        'second_term': 'is_second_term',
+        'previous_question_group': 'previous_question_group',
+        'previous_group': 'previous_question_group'
     }
     
     students_created = []
@@ -150,6 +156,15 @@ async def import_students_csv(file: UploadFile = File(...), db: Session = Depend
                                 student_data[db_field] = q10_val
                         except ValueError:
                             pass  # Invalid Q10, skip
+                    elif db_field == 'is_second_term' and value and value.strip():
+                        # Parse boolean: accept 'بەڵێ', 'yes', 'true', '1' as True
+                        val_lower = value.strip().lower()
+                        student_data[db_field] = val_lower in ['بەڵێ', 'yes', 'true', '1', 'ئارە']
+                    elif db_field == 'previous_question_group' and value and value.strip():
+                        # Accept A-G as valid groups
+                        group_val = value.strip().upper()
+                        if group_val in ['A', 'B', 'C', 'D', 'E', 'F', 'G']:
+                            student_data[db_field] = group_val
                     else:
                         clean_value = value.strip() if value else None
                         if clean_value:  # Only set if not empty

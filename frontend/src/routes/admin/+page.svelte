@@ -115,12 +115,20 @@
         </div>
     {:else}
         <!-- Summary Cards -->
-        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-bottom: 1.5rem;">
+        <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 1.5rem; margin-bottom: 1.5rem;">
+            <div style="background: white; padding: 1.5rem; border-radius: 12px; border: 1px solid #e2e8f0; border-right: 4px solid #6366f1; display: flex; align-items: center; gap: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                <div style="font-size: 2rem;">📚</div>
+                <div>
+                    <div style="font-size: 1.75rem; font-weight: 700;">{summary?.total_registered_students || 0}</div>
+                    <div style="color: #64748b; font-size: 0.875rem;">گشت قوتابییان</div>
+                </div>
+            </div>
+            
             <div style="background: white; padding: 1.5rem; border-radius: 12px; border: 1px solid #e2e8f0; display: flex; align-items: center; gap: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
                 <div style="font-size: 2rem;">👨‍🎓</div>
                 <div>
                     <div style="font-size: 1.75rem; font-weight: 700;">{summary?.total_students || 0}</div>
-                    <div style="color: #64748b; font-size: 0.875rem;">کۆی قوتابیان</div>
+                    <div style="color: #64748b; font-size: 0.875rem;">کۆی تاقیکراوان</div>
                 </div>
             </div>
             

@@ -17,9 +17,19 @@
         try {
             const all = await assignmentsAPI.getAll();
             // Filter to show only those graded by both teachers but Q10 not yet set
-            assignments = all.filter(a => 
+            let filtered = all.filter(a => 
                 a.is_graded_teacher1 && a.is_graded_teacher2
             );
+            
+            // Sort: ungraded (q10 is null) first, then graded ones at the bottom
+            filtered.sort((a, b) => {
+                const aHasQ10 = a.q10_mark !== null && a.q10_mark !== undefined;
+                const bHasQ10 = b.q10_mark !== null && b.q10_mark !== undefined;
+                if (aHasQ10 === bHasQ10) return 0;
+                return aHasQ10 ? 1 : -1;  // ungraded (no Q10) comes first
+            });
+            
+            assignments = filtered;
             
             // Pre-fill existing Q10 marks
             assignments.forEach(a => {
@@ -43,13 +53,18 @@
         savingId = assignment.id;
         try {
             await assignmentsAPI.updateQ10(assignment.id, mark);
-            showNotification('نمرەی پرسیاری ١٠ پاشەکەوتکرا!');
+            const isUpdate = assignment.q10_mark !== null && assignment.q10_mark !== undefined;
+            showNotification(isUpdate ? 'نمرەی پرسیاری ١٠ نوێکرایەوە!' : 'نمرەی پرسیاری ١٠ پاشەکەوتکرا!');
             await loadAssignments();
         } catch (error) {
             showError('نەتوانرا نمرەی پرسیاری ١٠ پاشەکەوت بکرێت');
         } finally {
             savingId = null;
         }
+    }
+    
+    function hasQ10(assignment) {
+        return assignment.q10_mark !== null && assignment.q10_mark !== undefined;
     }
 </script>
 
@@ -83,7 +98,7 @@
                     </thead>
                     <tbody>
                         {#each assignments as assignment}
-                            <tr>
+                            <tr class:graded={hasQ10(assignment)}>
                                 <td>
                                     <div class="student-info">
                                         <strong>{assignment.student.name}</strong>
@@ -99,8 +114,8 @@
                                 <td>
                                     {#if assignment.is_completed}
                                         <span class="badge badge-success">تەواوبوو</span>
-                                    {:else if assignment.q10_mark !== null}
-                                        <span class="badge badge-warning">پرسیاری ١٠ زیادکرا</span>
+                                    {:else if hasQ10(assignment)}
+                                        <span class="badge badge-info">پرسیاری ١٠ زیادکرا</span>
                                     {:else}
                                         <span class="badge badge-warning">ئامادەی پرسیاری ١٠</span>
                                     {/if}
@@ -121,11 +136,17 @@
                                 </td>
                                 <td>
                                     <button 
-                                        class="btn btn-success btn-sm"
+                                        class="btn {hasQ10(assignment) ? 'btn-secondary' : 'btn-success'} btn-sm"
                                         on:click={() => saveQ10(assignment)}
                                         disabled={savingId === assignment.id}
                                     >
-                                        {savingId === assignment.id ? 'پاشەکەوتکردن...' : 'پاشەکەوتکردن'}
+                                        {#if savingId === assignment.id}
+                                            پاشەکەوتکردن...
+                                        {:else if hasQ10(assignment)}
+                                            نوێکردنەوە
+                                        {:else}
+                                            پاشەکەوتکردن
+                                        {/if}
                                     </button>
                                 </td>
                             </tr>
@@ -192,5 +213,14 @@
     .btn-sm {
         padding: 0.375rem 0.75rem;
         font-size: 0.75rem;
+    }
+    
+    tr.graded {
+        background-color: #f0fdf4;
+    }
+    
+    .badge-info {
+        background-color: #3b82f6;
+        color: white;
     }
 </style>

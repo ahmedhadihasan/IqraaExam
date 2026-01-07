@@ -86,9 +86,9 @@ def create_teacher(teacher: TeacherCreate, db: Session = Depends(get_db)):
     if not team:
         raise HTTPException(status_code=404, detail="Team not found")
     
-    # Check if position is valid (1 or 2)
-    if teacher.position not in [1, 2]:
-        raise HTTPException(status_code=400, detail="Position must be 1 or 2")
+    # Check if position is valid (1, 2, or 3 for 3-teacher sessions)
+    if teacher.position not in [1, 2, 3]:
+        raise HTTPException(status_code=400, detail="Position must be 1, 2, or 3")
     
     # Check if position is already taken in this team
     existing = db.query(Teacher).filter(

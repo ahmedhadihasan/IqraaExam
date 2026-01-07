@@ -102,6 +102,8 @@ class StudentBase(BaseModel):
     birth_year: Optional[int] = None  # ساڵی لەدایکبوون
     regular_teacher: Optional[str] = None  # مامۆستای بابەت
     q10_mark: Optional[float] = None  # نمرەی پرسیاری ڡڠ
+    is_second_term: Optional[bool] = False  # قوتابی وەرزی دووەم
+    previous_question_group: Optional[str] = None  # گرووپی پرسیاری پێشووی
 
 class StudentCreate(StudentBase):
     pass
@@ -112,6 +114,8 @@ class StudentUpdate(BaseModel):
     phone: Optional[str] = None
     regular_teacher: Optional[str] = None
     q10_mark: Optional[float] = None
+    is_second_term: Optional[bool] = None
+    previous_question_group: Optional[str] = None
 
 class StudentResponse(BaseModel):
     id: int
@@ -120,6 +124,8 @@ class StudentResponse(BaseModel):
     birth_year: Optional[int] = None
     regular_teacher: Optional[str] = None
     q10_mark: Optional[float] = None
+    is_second_term: Optional[bool] = False
+    previous_question_group: Optional[str] = None
     created_at: datetime
     
     class Config:
@@ -132,6 +138,8 @@ class StudentCSVRow(BaseModel):
     birth_year: Optional[int] = None  # ساڵی لەدایکبوون
     regular_teacher: Optional[str] = None  # مامۆستای بابەت
     q10_mark: Optional[float] = None  # نمرەی پرسیاری ڡڠ
+    is_second_term: Optional[bool] = False  # قوتابی وەرزی دووەم
+    previous_question_group: Optional[str] = None  # گرووپی پرسیاری پێشووی
 
 
 # ========== Student Assignment Schemas ==========

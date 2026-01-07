@@ -9,7 +9,7 @@
     
     // New student form
     let showForm = false;
-    let newStudent = { name: '', birth_year: '', regular_teacher: '', phone: '', q10_mark: '' };
+    let newStudent = { name: '', birth_year: '', regular_teacher: '', phone: '', q10_mark: '', is_second_term: false, previous_question_group: '' };
     let submitting = false;
 
     // Edit student modal
@@ -58,11 +58,13 @@
                 birth_year: newStudent.birth_year ? parseInt(newStudent.birth_year) : null,
                 regular_teacher: newStudent.regular_teacher || null,
                 phone: newStudent.phone || null,
-                q10_mark: q10Value
+                q10_mark: q10Value,
+                is_second_term: newStudent.is_second_term || false,
+                previous_question_group: newStudent.previous_question_group || null
             };
             await studentsAPI.create(studentData);
             showNotification('قوتابی بە سەرکەوتوویی زیادکرا');
-            newStudent = { name: '', birth_year: '', regular_teacher: '', phone: '', q10_mark: '' };
+            newStudent = { name: '', birth_year: '', regular_teacher: '', phone: '', q10_mark: '', is_second_term: false, previous_question_group: '' };
             showForm = false;
             await loadStudents();
         } catch (error) {
@@ -100,7 +102,9 @@
                 birth_year: editingStudent.birth_year ? parseInt(editingStudent.birth_year) : null,
                 regular_teacher: editingStudent.regular_teacher || null,
                 phone: editingStudent.phone || null,
-                q10_mark: q10Value
+                q10_mark: q10Value,
+                is_second_term: editingStudent.is_second_term || false,
+                previous_question_group: editingStudent.previous_question_group || null
             });
             showNotification('قوتابی بە سەرکەوتوویی نوێکرایەوە');
             showEditModal = false;
@@ -151,8 +155,8 @@
     }
 
     function downloadTemplate() {
-        const headers = 'ناوی سییانی,ژمارەی تەلەفۆن,ساڵی لەدایکبوون,مامۆستای بابەت,نمرەی پرسیاری ۱۰\n';
-        const example = 'ئەحمەد محمد کەریم,07701234567,2010,مامۆستا علی,8.5\n';
+        const headers = 'ناوی سییانی,ژمارەی تەلەفۆن,ساڵی لەدایکبوون,مامۆستای بابەت,نمرەی پرسیاری ۱۰,وەرزی دووەم,گرووپی پێشوو\n';
+        const example = 'ئەحمەد محمد کەریم,07701234567,2010,مامۆستا علی,8.5,نەخێر,\nسارا عبدالله حسین,07709876543,2011,مامۆستا لەیلا,7,بەڵێ,A\n';
         const content = headers + example;
         
         const blob = new Blob(['\ufeff' + content], { type: 'text/csv;charset=utf-8;' });
@@ -216,6 +220,8 @@
                             <li><strong>ساڵی لەدایکبوون</strong> - ساڵی لەدایکبوون وەک ٢٠١٠ (ئارەزوومەندانە)</li>
                             <li><strong>مامۆستای بابەت</strong> - ناوی مامۆستای ڕێکوپێک (ئارەزوومەندانە)</li>
                             <li><strong>نمرەی پرسیاری ١٠</strong> - نمرەی پرسیاری دەیەم لە ٠ تا ١٠ (ئارەزوومەندانە)</li>
+                            <li><strong>وەرزی دووەم</strong> - بەڵێ/نەخێر ئایا قوتابی دووبارە تاقیدەداتەوە (ئارەزوومەندانە)</li>
+                            <li><strong>گرووپی پێشوو</strong> - گرووپی پرسیاری پێشوو A-G (ئارەزوومەندانە)</li>
                         </ul>
                         <button class="btn btn-link" on:click={downloadTemplate}>
                             ⬇️ داگرتنی نموونەی CSV
@@ -320,6 +326,32 @@
                             step="0.5"
                         />
                     </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label checkbox-label">
+                                <input 
+                                    type="checkbox" 
+                                    bind:checked={editingStudent.is_second_term}
+                                />
+                                قوتابی وەرزی دووەم (دووبارە تاقیدەداتەوە)
+                            </label>
+                        </div>
+                        {#if editingStudent.is_second_term}
+                            <div class="form-group">
+                                <label class="form-label">گرووپی پرسیاری پێشوو</label>
+                                <select class="form-input" bind:value={editingStudent.previous_question_group}>
+                                    <option value="">هەڵبژێرە</option>
+                                    <option value="A">گرووپ A</option>
+                                    <option value="B">گرووپ B</option>
+                                    <option value="C">گرووپ C</option>
+                                    <option value="D">گرووپ D</option>
+                                    <option value="E">گرووپ E</option>
+                                    <option value="F">گرووپ F</option>
+                                    <option value="G">گرووپ G</option>
+                                </select>
+                            </div>
+                        {/if}
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" on:click={() => showEditModal = false}>
@@ -391,6 +423,30 @@
                             step="0.5"
                         />
                     </div>
+                    <div class="form-group">
+                        <label class="form-label checkbox-label">
+                            <input 
+                                type="checkbox" 
+                                bind:checked={newStudent.is_second_term}
+                            />
+                            قوتابی وەرزی دووەم (دووبارە تاقیدەداتەوە)
+                        </label>
+                    </div>
+                    {#if newStudent.is_second_term}
+                        <div class="form-group">
+                            <label class="form-label">گرووپی پرسیاری پێشوو</label>
+                            <select class="form-input" bind:value={newStudent.previous_question_group}>
+                                <option value="">هەڵبژێرە</option>
+                                <option value="A">گرووپ A</option>
+                                <option value="B">گرووپ B</option>
+                                <option value="C">گرووپ C</option>
+                                <option value="D">گرووپ D</option>
+                                <option value="E">گرووپ E</option>
+                                <option value="F">گرووپ F</option>
+                                <option value="G">گرووپ G</option>
+                            </select>
+                        </div>
+                    {/if}
                     <div class="form-actions">
                         <button type="submit" class="btn btn-success" disabled={submitting}>
                             {submitting ? 'زیادکردن...' : 'زیادکردنی قوتابی'}
@@ -438,6 +494,7 @@
                             <th>ساڵی لەدایکبوون</th>
                             <th>مامۆستای بابەت</th>
                             <th>نمرەی پرسیاری ١٠</th>
+                            <th>وەرز</th>
                             <th>کردارەکان</th>
                         </tr>
                     </thead>
@@ -454,6 +511,18 @@
                                         <span style="color: #10b981; font-weight: 600;">{student.q10_mark}</span>
                                     {:else}
                                         <span style="color: #9ca3af;">-</span>
+                                    {/if}
+                                </td>
+                                <td data-label="وەرز">
+                                    {#if student.is_second_term}
+                                        <span class="badge badge-warning" title="گرووپی پێشوو: {student.previous_question_group || '-'}">
+                                            وەرزی ٢ 
+                                            {#if student.previous_question_group}
+                                                ({student.previous_question_group})
+                                            {/if}
+                                        </span>
+                                    {:else}
+                                        <span class="badge badge-secondary">وەرزی ١</span>
                                     {/if}
                                 </td>
                                 <td data-label="کردارەکان">
@@ -475,7 +544,7 @@
                             </tr>
                         {:else}
                             <tr>
-                                <td colspan="7" class="text-center text-light">
+                                <td colspan="8" class="text-center text-light">
                                     هیچ قوتابییەک نەدۆزرایەوە
                                 </td>
                             </tr>
@@ -720,5 +789,32 @@
             font-weight: bold;
             color: var(--text-light);
         }
+    }
+    
+    .checkbox-label {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        cursor: pointer;
+    }
+    
+    .checkbox-label input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+    }
+    
+    .form-row {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+    
+    .badge-secondary {
+        background-color: #94a3b8;
+        color: white;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.75rem;
     }
 </style>

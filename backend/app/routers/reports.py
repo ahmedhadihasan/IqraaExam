@@ -384,6 +384,10 @@ def get_summary(
     
     assignments = query.all()
     
+    # Get total registered students (all students in the database)
+    total_registered_students = db.query(Student).count()
+    
+    # Students who took the test (have assignments)
     total_students = len(assignments)
     completed = len([a for a in assignments if a.is_completed])
     pending_teacher1 = len([a for a in assignments if not a.is_graded_teacher1])
@@ -403,7 +407,8 @@ def get_summary(
         })
     
     return {
-        "total_students": total_students,
+        "total_registered_students": total_registered_students,  # گشت قوتابییان - all registered
+        "total_students": total_students,  # کۆی قوتابییان - students who took the test
         "completed": completed,
         "pending": total_students - completed,
         "pending_teacher1_grading": pending_teacher1,

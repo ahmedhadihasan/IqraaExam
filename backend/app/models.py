@@ -70,6 +70,11 @@ class Student(Base):
     birth_year = Column(Integer, nullable=True)  # ساڵی لەدایکبوون
     regular_teacher = Column(String(100), nullable=True)  # مامۆستای بابەت
     q10_mark = Column(Float, nullable=True)  # نمرەی پرسیاری ڡڠ (imported from CSV or set manually)
+    
+    # Second term / retake tracking
+    is_second_term = Column(Boolean, default=False)  # قوتابی وەرزی دووەم - retaking the exam
+    previous_question_group = Column(String(10), nullable=True)  # گرووپی پرسیاری پێشووی - previous group code (A-G)
+    
     created_at = Column(DateTime, default=datetime.utcnow)
     
     assignments = relationship("StudentAssignment", back_populates="student")
