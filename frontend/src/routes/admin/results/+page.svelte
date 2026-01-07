@@ -40,17 +40,28 @@
         
         const t1Total = calcTotal(r.teacher1_marks);
         const t2Total = calcTotal(r.teacher2_marks);
+        const t3Total = calcTotal(r.teacher3_marks);
         
-        if (t1Total !== null && t2Total !== null && r.q10_mark !== null) {
+        // Check how many teachers graded based on session config
+        const teachersPerRoom = activeSession?.teachers_per_room || 2;
+        let allTeachersGraded = false;
+        
+        if (teachersPerRoom === 3) {
+            allTeachersGraded = t1Total !== null && t2Total !== null && t3Total !== null;
+        } else {
+            allTeachersGraded = t1Total !== null && t2Total !== null;
+        }
+        
+        if (allTeachersGraded && r.q10_mark !== null) {
             // Check if passed (>=80)
             if (r.final_total !== null && r.final_total >= 80) {
                 return 'passed';
             } else {
                 return 'failed';
             }
-        } else if (t1Total !== null && t2Total !== null) {
+        } else if (allTeachersGraded) {
             return 'waiting-q10';
-        } else if (t1Total !== null || t2Total !== null) {
+        } else if (t1Total !== null || t2Total !== null || t3Total !== null) {
             return 'partial';
         }
         return 'pending';
@@ -114,8 +125,11 @@
                             <th>لەدایکبوون</th>
                             <th>لیژنە</th>
                             <th>گرووپ</th>
-                            <th>سەرۆکی لیژنە </th>
-                            <th>ئەندام لیژنە </th>
+                            <th>مامۆستای ۱</th>
+                            <th>مامۆستای ۲</th>
+                            {#if activeSession?.teachers_per_room === 3}
+                                <th>مامۆستای ۳</th>
+                            {/if}
                             <th>ناوەند پ١-پ٩</th>
                             <th>پرسیاری ١٠</th>
                             <th>کۆی گشتی</th>
@@ -126,6 +140,7 @@
                         {#each results as r}
                             {@const t1Total = calcTotal(r.teacher1_marks)}
                             {@const t2Total = calcTotal(r.teacher2_marks)}
+                            {@const t3Total = calcTotal(r.teacher3_marks)}
                             {@const status = getStatus(r)}
                             <tr>
                                 <td data-label="قوتابی"><strong>{r.student_name}</strong></td>
@@ -134,8 +149,11 @@
                                 <td data-label="گرووپ">
                                     <span class="badge badge-primary">{r.question_group}</span>
                                 </td>
-                                <td data-label="سەرۆکی لیژنە " class="text-center">{t1Total ?? '-'}</td>
-                                <td data-label="ئەندام لیژنە " class="text-center">{t2Total ?? '-'}</td>
+                                <td data-label="مامۆستای ۱" class="text-center">{t1Total ?? '-'}</td>
+                                <td data-label="مامۆستای ۲" class="text-center">{t2Total ?? '-'}</td>
+                                {#if activeSession?.teachers_per_room === 3}
+                                    <td data-label="مامۆستای ۳" class="text-center">{t3Total ?? '-'}</td>
+                                {/if}
                                 <td data-label="ناوەند" class="text-center font-bold">{r.total_average_q1_q9 ?? '-'}</td>
                                 <td data-label="پرسیاری ١٠" class="text-center">{r.q10_mark ?? '-'}</td>
                                 <td data-label="کۆی گشتی" class="text-center">

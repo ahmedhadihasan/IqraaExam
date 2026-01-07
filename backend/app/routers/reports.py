@@ -86,39 +86,42 @@ def get_student_results(
         if not assignment.student or not assignment.team or not assignment.question_group:
             continue
             
-        # Get grades from both teachers
+        # Get grades from all teachers (up to 3)
         grades = assignment.grades
         teacher1_grade = None
         teacher2_grade = None
+        teacher3_grade = None
         
         for grade in grades:
             teacher = db.query(Teacher).filter(Teacher.id == grade.teacher_id).first()
             if teacher:
                 if teacher.position == 1:
                     teacher1_grade = grade
-                else:
+                elif teacher.position == 2:
                     teacher2_grade = grade
+                elif teacher.position == 3:
+                    teacher3_grade = grade
         
         # Build marks dictionaries
         teacher1_marks = {}
         teacher2_marks = {}
+        teacher3_marks = {}
         average_marks = {}
         
         for i in range(1, 10):
             q_key = f"q{i}"
             t1_mark = getattr(teacher1_grade, f'q{i}_mark', None) if teacher1_grade else None
             t2_mark = getattr(teacher2_grade, f'q{i}_mark', None) if teacher2_grade else None
+            t3_mark = getattr(teacher3_grade, f'q{i}_mark', None) if teacher3_grade else None
             
             teacher1_marks[q_key] = t1_mark
             teacher2_marks[q_key] = t2_mark
+            teacher3_marks[q_key] = t3_mark
             
-            # Calculate average
-            if t1_mark is not None and t2_mark is not None:
-                average_marks[q_key] = (t1_mark + t2_mark) / 2
-            elif t1_mark is not None:
-                average_marks[q_key] = t1_mark
-            elif t2_mark is not None:
-                average_marks[q_key] = t2_mark
+            # Calculate average of all available marks
+            available_marks = [m for m in [t1_mark, t2_mark, t3_mark] if m is not None]
+            if available_marks:
+                average_marks[q_key] = sum(available_marks) / len(available_marks)
             else:
                 average_marks[q_key] = None
         
@@ -139,6 +142,7 @@ def get_student_results(
             question_group=f"گرووپ {assignment.question_group.code}",
             teacher1_marks=teacher1_marks,
             teacher2_marks=teacher2_marks,
+            teacher3_marks=teacher3_marks if any(v is not None for v in teacher3_marks.values()) else None,
             average_marks=average_marks,
             total_average_q1_q9=round(total_avg, 2) if total_avg > 0 else None,
             q10_mark=assignment.q10_mark,

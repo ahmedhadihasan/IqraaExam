@@ -239,6 +239,7 @@ class StudentResult(BaseModel):
     question_group: str
     teacher1_marks: Dict[str, Optional[float]]
     teacher2_marks: Dict[str, Optional[float]]
+    teacher3_marks: Optional[Dict[str, Optional[float]]] = None
     average_marks: Dict[str, Optional[float]]
     total_average_q1_q9: Optional[float]
     q10_mark: Optional[float]
